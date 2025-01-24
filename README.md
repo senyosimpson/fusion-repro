@@ -50,11 +50,16 @@ Error: External error: Parquet error: External: bad data
 ```
 
 I initially ran into this error using datafusion in an application.
-It gives a more descriptive error about converting types: `Error: ParquetError(External(ProtocolError { kind: InvalidData, message: "cannot convert 2 into TType" }))`
+It gives a more descriptive error about converting types
+
+```
+Error: ParquetError(External(ProtocolError { kind: InvalidData, message: "cannot convert 2 into TType" }))
+```
 
 Using PyArrow, it also works fine.
 I made a simple script that loads the Parquet file as a Pandas DataFrame and filters it.
 It's found under `pyarrow-ex`, just run `python3 example.py` (needs PyArrow and Pandas dependencies).
+For simplicity sake, here's the code
 
 ```python
 def main():
@@ -78,4 +83,4 @@ However, it only skips checking `0x02` when a [collection is being parsed](https
 The only weird thing is I have no map/list in my schema.
 I assume this means this `0x02` is being used to encode something else but it is beyond my knowledge.
 
-I went spelunking in `parquet-go` codebase. The Thrift protocol implementation is split amongst [the compact protocol](https://github.com/parquet-go/parquet-go/blob/main/encoding/thrift/compact.go) and [the Thrift type definitions](https://github.com/parquet-go/parquet-go/blob/main/encoding/thrift/thrift.go) and [the encoding logic](https://github.com/parquet-go/parquet-go/blob/main/encoding/thrift/encode.go)
+I went spelunking in `parquet-go` codebase. The Thrift protocol implementation is split amongst [the compact protocol](https://github.com/parquet-go/parquet-go/blob/main/encoding/thrift/compact.go), [the Thrift type definitions](https://github.com/parquet-go/parquet-go/blob/main/encoding/thrift/thrift.go) and [the encoding logic](https://github.com/parquet-go/parquet-go/blob/main/encoding/thrift/encode.go)
